@@ -1,0 +1,1 @@
+import scc from './ImageGalleryItem.module.css'
