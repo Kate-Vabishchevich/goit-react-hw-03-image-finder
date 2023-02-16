@@ -2,6 +2,7 @@ import { Component } from 'react';
 import Searchbar from './Searchbar/Searchbar';
 import { searchPictures } from 'services/fetchAPI';
 import ImageGallery from './ImageGallery/ImageGallery';
+import Button from './Button/Button';
 
 class Pictures extends Component {
     state = {
@@ -55,11 +56,12 @@ class Pictures extends Component {
 
     render() {
         const { pictures } = this.state;
-        const { searchPictures } = this;
+        const { searchPictures, loadMore } = this;
         return (
             <div>
                 <Searchbar onSubmit={searchPictures} />
                 <ImageGallery pictures={pictures} />
+               <Button onClick={loadMore}/>
             </div>
         );
     }
