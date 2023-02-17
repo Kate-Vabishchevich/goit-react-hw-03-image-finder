@@ -5,7 +5,7 @@ import ImageGallery from './ImageGallery/ImageGallery';
 import LargeImage from './ImageGallery/LargeImage/LargeImage';
 import Button from './Button/Button';
 import Modal from 'services/Modal/Modal';
-// import Loader from './Loader/Loader';
+import Loader from './Loader/Loader';
 
 class Pictures extends Component {
     state = {
@@ -78,15 +78,15 @@ class Pictures extends Component {
     }
 
     render() {
-        const { pictures, showModal, largeImage } = this.state;
+        const { pictures, showModal, largeImage, loading, error } = this.state;
         const { searchPictures, loadMore, showPicture, closeModal } = this;
         return (
             <div>
                 <Searchbar onSubmit={searchPictures} />
                 <ImageGallery pictures={pictures} showPicture={ showPicture} />
-                {/* {loading && <Loader />} */}
-                {/* {error && <p>Something goes wrong...</p>} */}
-                <Button onClick={loadMore} />
+                {loading && <Loader />}
+                {error && <p>Whoops, something went wrong: </p>}
+                {pictures.length > 0 && <Button onClick={loadMore} />}
                 {showModal && (<Modal onClose={closeModal}>
                     <LargeImage {...largeImage} />
                 </Modal>)}
