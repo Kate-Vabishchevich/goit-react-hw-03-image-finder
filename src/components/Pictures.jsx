@@ -19,6 +19,13 @@ class Pictures extends Component {
         showModal: false,
     };
 
+    componentDidUpdate(prevProps, prevState) {
+        const { search, page } = this.state;
+        if (prevState.search !== search || prevState.page !== page) {
+            this.fetchPictures();
+        }
+    }
+
     async fetchPictures() {
         try {
             this.setState({ loading: true });
@@ -53,6 +60,13 @@ class Pictures extends Component {
         }
     };
 
+    showPicture = ({ largeImageURL }) => {
+        this.setState({
+            largeImage: { largeImageURL },
+            showModal: true,
+        });
+    }
+
     loadMore = () => {
         this.setState(({ page }) => ({
             page: page + 1,
@@ -65,12 +79,13 @@ class Pictures extends Component {
 
     render() {
         const { pictures, showModal, largeImage } = this.state;
-        const { searchPictures, loadMore, closeModal } = this;
+        const { searchPictures, loadMore, showPicture, closeModal } = this;
         return (
             <div>
                 <Searchbar onSubmit={searchPictures} />
-                <ImageGallery pictures={pictures} />
+                <ImageGallery pictures={pictures} showPicture={ showPicture} />
                 {/* {loading && <Loader />} */}
+                {/* {error && <p>Something goes wrong...</p>} */}
                 <Button onClick={loadMore} />
                 {showModal && (<Modal close={closeModal}>
                     <LargeImage {...largeImage} />
