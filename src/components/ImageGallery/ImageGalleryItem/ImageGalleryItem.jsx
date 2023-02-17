@@ -3,9 +3,9 @@ import PropTypes from 'prop-types';
 
 const ImageGalleryItem = ({ webformatURL, tags, onClick }) => {
     return (
-        <li className={css.gallery_item} onClick={onClick}>
+        <li className={css.item} onClick={onClick}>
             <img
-                className={css.gallery_img}
+                className={css.img}
                 src={webformatURL}
                 alt={tags} />
         </li>

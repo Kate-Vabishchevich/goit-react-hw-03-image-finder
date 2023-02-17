@@ -87,7 +87,7 @@ class Pictures extends Component {
                 {/* {loading && <Loader />} */}
                 {/* {error && <p>Something goes wrong...</p>} */}
                 <Button onClick={loadMore} />
-                {showModal && (<Modal close={closeModal}>
+                {showModal && (<Modal onClose={closeModal}>
                     <LargeImage {...largeImage} />
                 </Modal>)}
             </div>
