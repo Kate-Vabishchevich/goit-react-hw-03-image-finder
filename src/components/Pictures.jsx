@@ -11,20 +11,20 @@ class Pictures extends Component {
         search: '',
         status: 'idle',
         page: 1,
-        totalPages: null,
+        // totalPages: null,
         per_page: 12,
         error: null,
     };
 
     async componentDidUpdate(prevProps, prevState) {
-        const { search, page, totalPages, per_page } = this.state;
+        const { search, page, per_page } = this.state;
         if (prevState.search !== search || prevState.page !== page) {
             try {
                 this.setState({ status: 'pending' });
                 const data = await searchPictures(search, page, per_page);
                 this.setState(({ pictures }) => ({
                     pictures: [...pictures, ...data.hits],
-                    totalPages: Math.ceil(data.totalHits / per_page),
+                    // totalPages: Math.ceil(data.totalHits / per_page),
                     status: 'resolved',
                 }));
             } catch (error) {
