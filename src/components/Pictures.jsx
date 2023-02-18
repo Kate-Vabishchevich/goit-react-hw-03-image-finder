@@ -4,13 +4,14 @@ import { searchPictures } from 'services/fetchAPI';
 import ImageGallery from './ImageGallery/ImageGallery';
 import LargeImage from './ImageGallery/LargeImage/LargeImage';
 import Button from './Button/Button';
-import Modal from 'services/Modal/Modal';
+import Modal from './Modal/Modal';
 import Loader from './Loader/Loader';
 
 class Pictures extends Component {
     state = {
         pictures: [],
         search: '',
+        status: 'idle',
         loading: false,
         loadMore: false,
         page: 1,
@@ -19,28 +20,38 @@ class Pictures extends Component {
         showModal: false,
     };
 
-    componentDidUpdate(prevProps, prevState) {
+    async componentDidUpdate(prevProps, prevState) {
         const { search, page } = this.state;
         if (prevState.search !== search || prevState.page !== page) {
-            this.fetchPictures();
-        }
-    }
-
-    async fetchPictures() {
-        try {
-            this.setState({ loading: true });
-            const { search, page } = this.state;
-            const data = await searchPictures(search, page);
-            this.setState(({ pictures }) => ({
-                pictures: [...pictures, ...data.hits],
-            }));
-            this.checkData(data);
-        } catch (error) {
-            this.setState(error => error.message);
-        } finally {
-            this.setState({ loading: false });
+            try {
+                this.setState({ status: 'pending' });
+                const data = await searchPictures(search, page);
+                this.setState(({ pictures }) => ({
+                    pictures: [...pictures, ...data.hits],
+                }));
+            } catch (error) {
+                this.setState({ status: 'rejected' });
+                this.setState(error => error.message);
+            }
         }
     };
+
+    // async fetchPictures() {
+    //     try {
+    //         this.setState({ loading: true });
+    //         const { search, page } = this.state;
+            
+    //         const data = await searchPictures(search, page);
+    //         this.setState(({ pictures }) => ({
+    //             pictures: [...pictures, ...data.hits],
+    //         }));
+    //         this.checkData(data);
+    //     } catch (error) {
+    //         this.setState(error => error.message);
+    //     } finally {
+    //         this.setState({ loading: false });
+    //     }
+    // };
 
     searchPictures = ({ search }) => {
         this.setState({ search, page: 1, pictures: [] });
@@ -78,7 +89,8 @@ class Pictures extends Component {
     }
 
     render() {
-        const { pictures, showModal, largeImage, loading, error } = this.state;
+        const { pictures, showModal, largeImage, loading, error
+        } = this.state;
         const { searchPictures, loadMore, showPicture, closeModal } = this;
         return (
             <div>
