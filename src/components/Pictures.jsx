@@ -2,9 +2,7 @@ import { Component } from 'react';
 import Searchbar from './Searchbar/Searchbar';
 import { searchPictures } from 'services/fetchAPI';
 import ImageGallery from './ImageGallery/ImageGallery';
-import LargeImage from './ImageGallery/LargeImage/LargeImage';
 import Button from './Button/Button';
-import Modal from './Modal/Modal';
 import Loader from './Loader/Loader';
 
 class Pictures extends Component {
@@ -12,13 +10,10 @@ class Pictures extends Component {
         pictures: [],
         search: '',
         status: 'idle',
-        loadMore: false,
         page: 1,
         totalPages: null,
         per_page: 12,
         error: null,
-        largeImage: null,
-        showModal: false,
     };
 
     async componentDidUpdate(prevProps, prevState) {
@@ -79,37 +74,22 @@ class Pictures extends Component {
     //     }
     // };
 
-    showPicture = ({ largeImageURL }) => {
-        this.setState({
-            largeImage: { largeImageURL },
-            showModal: true,
-        });
-    }
-
     loadMore = () => {
         this.setState(({ page }) => ({
             page: page + 1,
         }));
     };
 
-    closeModal = () => {
-        this.setState({ showModal: false, largeImage: null });
-    }
-
     render() {
-        const { pictures, showModal, largeImage, error, status
-        } = this.state;
-        const { searchPictures, loadMore, showPicture, closeModal } = this;
+        const { pictures, error, status } = this.state;
+        const { searchPictures, loadMore } = this;
         return (
             <div>
                 <Searchbar onSubmit={searchPictures} />
-                <ImageGallery pictures={pictures} showPicture={ showPicture} />
-                {status === 'pending' && <Loader />}
-                {error && <p>Whoops, something went wrong: </p>}
+                <ImageGallery pictures={pictures} />
+                {error && <p>Whoops, something went wrong. Please, refresh the page </p>}
                 {pictures.length > 0 && <Button onClick={loadMore} />}
-                {showModal && (<Modal onClose={closeModal}>
-                    <LargeImage {...largeImage} />
-                </Modal>)}
+                {status === 'pending' && <Loader />}
             </div>
         );
     }

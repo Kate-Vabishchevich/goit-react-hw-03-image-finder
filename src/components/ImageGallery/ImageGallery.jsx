@@ -2,17 +2,22 @@ import css from './ImageGallery.module.css';
 import PropTypes from 'prop-types';
 import ImageGalleryItem from './ImageGalleryItem/ImageGalleryItem';
 
-const ImageGallery = ({ pictures, showPicture }) => {
-    const elements = pictures.map(({ id, largeImageURL, webformatURL, tags }) => (
-        <ImageGalleryItem
-            key={id}
-            webformatURL={webformatURL}
-            tags={tags}
-            onClick={() => showPicture({ largeImageURL })}
-        />
-    ));
+const ImageGallery = ({ pictures }) => {
 
-    return <ul className={css.image_gallery}>{elements}</ul>
+    return (
+        <ul className={css.image_gallery}>
+            {pictures.map(({ id, largeImageURL, webformatURL, tags }) => {
+                return (
+                    <ImageGalleryItem
+                    key={id}
+                    webformatURL={webformatURL}
+                    largeImageURL={largeImageURL}
+                    tags={tags}
+                /> 
+            );
+        })}
+        </ul>
+    );
 };
 
 export default ImageGallery;
