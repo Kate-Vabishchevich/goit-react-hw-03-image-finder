@@ -12,22 +12,25 @@ class Pictures extends Component {
         pictures: [],
         search: '',
         status: 'idle',
-        loading: false,
         loadMore: false,
         page: 1,
+        totalPages: null,
+        per_page: 12,
         error: null,
         largeImage: null,
         showModal: false,
     };
 
     async componentDidUpdate(prevProps, prevState) {
-        const { search, page } = this.state;
+        const { search, page, totalPages, per_page } = this.state;
         if (prevState.search !== search || prevState.page !== page) {
             try {
                 this.setState({ status: 'pending' });
-                const data = await searchPictures(search, page);
+                const data = await searchPictures(search, page, per_page);
                 this.setState(({ pictures }) => ({
                     pictures: [...pictures, ...data.hits],
+                    totalPages: Math.ceil(data.totalHits / per_page),
+                    status: 'resolved',
                 }));
             } catch (error) {
                 this.setState({ status: 'rejected' });
@@ -54,22 +57,27 @@ class Pictures extends Component {
     // };
 
     searchPictures = ({ search }) => {
-        this.setState({ search, page: 1, pictures: [] });
+        if (search === '') {
+            alert('Searchfield is empty. Please, enter your request.');
+      return;
+        } if (search !== this.state.value) {
+            this.setState({ search, page: 1, pictures: [] });
+        }
     };
     
-    checkData = ({ totalHits, hits }) => {
-        const PER_PAGE = 12
-        const { page } = this.state;
-        if (page === 1 && totalHits !== 0) {
-            this.setState({ loadMore: true });
-        }
-        if (totalHits === 0) {
-            this.setState({ loadMore: false })
-        }
-        else if (hits.length < PER_PAGE) {
-            alert('Oops! This is a finish, try something else')
-        }
-    };
+    // checkData = ({ totalHits, hits }) => {
+    //     const PER_PAGE = 12
+    //     const { page } = this.state;
+    //     if (page === 1 && totalHits !== 0) {
+    //         this.setState({ loadMore: true });
+    //     }
+    //     if (totalHits === 0) {
+    //         this.setState({ loadMore: false })
+    //     }
+    //     else if (hits.length < PER_PAGE) {
+    //         alert('Oops! This is a finish, try something else')
+    //     }
+    // };
 
     showPicture = ({ largeImageURL }) => {
         this.setState({
@@ -89,14 +97,14 @@ class Pictures extends Component {
     }
 
     render() {
-        const { pictures, showModal, largeImage, loading, error
+        const { pictures, showModal, largeImage, error, status
         } = this.state;
         const { searchPictures, loadMore, showPicture, closeModal } = this;
         return (
             <div>
                 <Searchbar onSubmit={searchPictures} />
                 <ImageGallery pictures={pictures} showPicture={ showPicture} />
-                {loading && <Loader />}
+                {status === 'pending' && <Loader />}
                 {error && <p>Whoops, something went wrong: </p>}
                 {pictures.length > 0 && <Button onClick={loadMore} />}
                 {showModal && (<Modal onClose={closeModal}>
