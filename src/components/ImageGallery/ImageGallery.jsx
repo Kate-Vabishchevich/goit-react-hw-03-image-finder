@@ -31,5 +31,4 @@ ImageGallery.propTypes = {
             tags: PropTypes.string.isRequired,
         })
     ),
-    // showPicture: PropTypes.func.isRequired,
 };

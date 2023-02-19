@@ -4,9 +4,9 @@ const Loader = () => {
   return (
     <div
     style={{
-        marginLeft: 'auto',
-        marginRight: 'auto',
+        margin: '0, auto',
         display: 'flex',
+        justifyContent: 'center',
         width: '100%',
       }}>
       <RotatingLines

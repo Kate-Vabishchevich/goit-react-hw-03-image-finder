@@ -11,6 +11,9 @@ class Searchbar extends Component {
     handleSubmit = e => {
         e.preventDefault();
         const { onSubmit } = this.props;
+         if (this.state.search.trim() === '') {
+             return alert('Searchfield is empty. Please, enter your request.');
+        } 
         onSubmit({ ...this.state });
         this.reset();
     }

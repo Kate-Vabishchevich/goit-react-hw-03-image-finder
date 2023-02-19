@@ -7,13 +7,8 @@ class ImageGalleryItem extends Component {
     state = {
         isOpen: false,
     };
+    handleModal = () => { this.setState(({ isOpen }) => ({ isOpen: !isOpen })); };
 
-    handleModal = () => {
-        const { isOpen } = this.state;
-        this.setState({
-            isOpen: !isOpen,
-        });
-    };
 
     render() {
         const { webformatURL, largeImageURL, tags} = this.props;
